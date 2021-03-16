@@ -1,0 +1,60 @@
+pragma solidity ^0.5.0;
+contract Address{
+    address payable private myAddress= 0xaD335c3c503aBd738Af9a7690FB41f9fadcBE91A;
+function setAddress(address payable add) public{
+    myAddress= add;
+}
+function getBalance() public view returns(uint){
+    return myAddress.balance;
+}
+function getAddress() public view returns(address){
+    return myAddress;
+}
+function pay() public payable{
+    myAddress.transfer(msg.value);
+}
+
+struct Student{
+    string name;
+    uint age;
+    string rollNo;
+    address studentAddress;
+    bool feePaid;
+    bool BSdegree;
+    gender studentGender;
+    studyMode modeOdStudy;
+}
+
+enum gender {male, female}
+enum studyMode {online, onsite}
+
+// to record total numbe rof students in the class
+    uint public numberOfEnrolledStudents;
+
+// total amount collected from students
+    uint public totalBalance;
+
+event addData(string name, uint age, string rollNo, address studentAddress, bool feePaid, bool BSDegree, gender studentGender, studyMode modeOfStudy, uint Time);
+
+    mapping (string => Student) public studentRecord;
+  
+function enrollStudent (string memory name, uint age, string memory rollNo, bool feePaid, bool BSdegree, gender studentGender, studyMode modeOfStudy,address studentAddress) public payable returns (string memory){
+    //   student has to pay 2 ether to enroll in the class
+       require(msg.value>= 2) ;
+       require(myAddress!= msg.sender);
+       myAddress.transfer(msg.value);
+       totalBalance += msg.value;
+       numberOfEnrolledStudents ++;
+       Student memory s1= Student(name, age, rollNo, studentAddress,feePaid, BSdegree, studentGender, modeOfStudy);
+       studentRecord[rollNo]=s1;
+       emit addData(name, age, rollNo, studentAddress, feePaid, BSdegree, studentGender, modeOfStudy,now);
+       return rollNo;
+ }
+event addData2(bool);
+ mapping (string => bool) studentDegree;
+  function checkDegree(string memory rollNo) public view returns(string memory){
+         Student memory s2 = Student(feePaid);
+             studentDegree[rollNo]= s2;
+             emit addData2(feePaid);
+             return rollNo;
+  }
